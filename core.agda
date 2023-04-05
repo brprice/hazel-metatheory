@@ -120,8 +120,8 @@ module core where
                  Γ ⊢ e2 <= num →
                  Γ ⊢ (e1 ·+ e2) => num
       SEHole  : {Γ : ·ctx} → Γ ⊢ ⦇-⦈ => ⦇-⦈
-      SNEHole : {Γ : ·ctx} {e : ė} {t : τ̇} →
-                 Γ ⊢ e => t →
+      SNEHole : {Γ : ·ctx} {e : ė} →
+                 Γ ⊢ e <= ⦇-⦈ →
                  Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈
 
     -- analysis
@@ -135,6 +135,11 @@ module core where
                  t ▸arr (t1 ==> t2) →
                  (Γ ,, (x , t1)) ⊢ e <= t2 →
                  Γ ⊢ (·λ x e) <= t
+
+  snehole' : {Γ : ·ctx} {e : ė} {t : τ̇} →
+              Γ ⊢ e => t →
+              Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈
+  snehole' e = SNEHole (ASubsume e TCHole2)
 
   ----- some theorems about the rules and judgement presented so far.
 
@@ -425,10 +430,10 @@ module core where
       SAZipPlus2 : {Γ : ·ctx} {e : ė} {eh eh' : ê} {α : action} →
                    (Γ ⊢ eh ~ α ~> eh' ⇐ num) →
                    Γ ⊢ (e ·+₂ eh) => num ~ α ~> (e ·+₂ eh') => num
-      SAZipHole : {Γ : ·ctx} {e e' : ê} {t t' : τ̇} {α : action} {e◆ : ė} →
+      SAZipHole : {Γ : ·ctx} {e e' : ê} {α : action} {e◆ : ė} →
                    (erase-e e e◆) →
-                   (Γ ⊢ e◆ => t) →
-                   (Γ ⊢ e => t ~ α ~> e' => t') →
+                   (Γ ⊢ e◆ <= ⦇-⦈) →
+                   (Γ ⊢ e ~ α ~> e' ⇐ ⦇-⦈) →
                    Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈ ~ α ~>  ⦇⌜ e' ⌟⦈ => ⦇-⦈
 
     -- analytic action expressions
@@ -472,3 +477,10 @@ module core where
                  (t ▸arr (t1 ==> t2)) →
                  ((Γ ,, (x , t1)) ⊢ e ~ α ~> e' ⇐ t2) →
                  Γ ⊢ (·λ x e) ~ α ~> (·λ x e') ⇐ t
+
+  saziphole' : {Γ : ·ctx} {e e' : ê} {t t' : τ̇} {α : action} {e◆ : ė} →
+                (erase-e e e◆) →
+                (Γ ⊢ e◆ => t) →
+                (Γ ⊢ e => t ~ α ~> e' => t') →
+                Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈ ~ α ~>  ⦇⌜ e' ⌟⦈ => ⦇-⦈
+  saziphole' a b c = SAZipHole a (ASubsume b TCHole2) (AASubsume a b c TCHole2)

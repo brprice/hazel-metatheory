@@ -63,10 +63,10 @@ module constructability where
                                            (runsynth++ (ziplem-plus1 ih1)
                                             (DoSynth (SAMove EMPlusParent1) DoRefl)))))
 
-    construct-synth (SNEHole wt) with construct-synth wt
-    ... | (l , ih) = l ++ construct nehole :: move parent :: [] ,
-                     runsynth++ ih
-                         (DoSynth SAConNEHole (DoSynth (SAMove EMNEHoleParent) DoRefl))
+    construct-synth (SNEHole wt) with construct-ana wt
+    ... | (l , ih) = construct nehole :: l ++ move parent :: [] ,
+                     DoSynth SAConNEHole (runsynth++ (ziplem-nehole-a (ASubsume SEHole TCRefl) ih)
+                                                     (DoSynth (SAMove EMNEHoleParent) DoRefl))
 
     -- construction of expressions in analytic positions
     construct-ana : {Γ : ·ctx} {t : τ̇} {e : ė} → (Γ ⊢ e <= t) →

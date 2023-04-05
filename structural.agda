@@ -137,7 +137,7 @@ module structural where
     wt-weak-synth apt SNum f = SNum
     wt-weak-synth apt (SPlus x₁ x₂) (f1 , f2) = SPlus (wt-weak-ana apt x₁ f1) (wt-weak-ana apt x₂ f2)
     wt-weak-synth apt SEHole f = SEHole
-    wt-weak-synth apt (SNEHole wt) f = SNEHole (wt-weak-synth apt wt f)
+    wt-weak-synth apt (SNEHole wt) f = SNEHole (wt-weak-ana apt wt f)
 
     wt-weak-ana : {Γ : ·ctx} {x : Nat} {t t' : τ̇} {e : ė} →
                     x # Γ →
@@ -206,8 +206,8 @@ module structural where
                                                                   (act-weak-ana apt (π2 f) (π2 f') x₃)
     act-weak-synth apt f f' (SAZipPlus1 x₁) = SAZipPlus1 (act-weak-ana apt (π1 f) (π1 f') x₁)
     act-weak-synth apt f f' (SAZipPlus2 x₁) = SAZipPlus2 (act-weak-ana apt (π2 f) (π2 f') x₁)
-    act-weak-synth apt f f' (SAZipHole x₁ x₂ d) = SAZipHole x₁ (wt-weak-synth apt x₂ (fresh-er-lem x₁ f))
-                                                               (act-weak-synth apt f f' d)
+    act-weak-synth apt f f' (SAZipHole x₁ x₂ d) = SAZipHole x₁ (wt-weak-ana apt x₂ (fresh-er-lem x₁ f))
+                                                               (act-weak-ana apt f f' d)
 
     act-weak-ana : ∀{ Γ x t t' e e' α } →
                          x # Γ →

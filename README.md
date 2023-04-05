@@ -1,3 +1,19 @@
+# brprice's modifications
+
+This is forked from https://github.com/hazelgrove/agda-popl17, and I
+have changed the typing rule `SNEHole`. In the original, the contents of
+a non-empty hole was a synthesisable position, and we didn't care what
+particular type it synthesised. Now the expression within a non-empty
+hole checks against the hole type.
+
+Note that this is slightly more liberal: anything that synthesises a
+type will check against the hole type, by `ASubsume`. In the opposite
+direction, if `Γ ⊢ e <= ⦇-⦈`, then one can add a type annotation so `Γ
+⊢ e ·: ⦇-⦈ => ⦇-⦈`
+
+The below is the original README.md. Note that the above modifications
+have only been applied to the `master` branch.
+
 # agda-popl17
 
 This repository contains the mechanization of Hazelnut and the associated

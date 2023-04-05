@@ -66,9 +66,9 @@ module reachability where
     ... | l , ih , m = l ++ [ move parent ] ,
                        runsynth++ (ziplem-plus2 ih) (DoSynth (SAMove EMPlusParent2) DoRefl) ,
                        movements++ m (AM:: AM[])
-    reachup-synth (EENEHole er) (SNEHole wt) with reachup-synth er wt
+    reachup-synth (EENEHole er) (SNEHole wt) with reachup-ana er wt
     ... | l , ih , m = l ++ [ move parent ] ,
-                       runsynth++ (ziplem-nehole-a (lem-erase-synth er wt) ih) (DoSynth (SAMove EMNEHoleParent) DoRefl) ,
+                       runsynth++ (ziplem-nehole-a (lem-erase-ana er wt) ih) (DoSynth (SAMove EMNEHoleParent) DoRefl) ,
                        movements++ m (AM:: AM[])
 
     reachup-ana : {Γ : ·ctx} {e : ê} {t : τ̇} {e' : ė} →
@@ -130,7 +130,7 @@ module reachability where
     ... | l , ih , m = move (child 2) :: l ,
                        DoSynth (SAMove EMPlusChild2) (ziplem-plus2 ih) ,
                        AM:: m
-    reachdown-synth (EENEHole er) (SNEHole wt) with reachdown-synth er wt
+    reachdown-synth (EENEHole er) (SNEHole wt) with reachdown-ana er wt
     ... | l , ih , m = move (child 1) :: l ,
                        DoSynth (SAMove EMNEHoleChild1) (ziplem-nehole-a wt ih) ,
                        AM:: m

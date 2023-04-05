@@ -159,13 +159,13 @@ module checks where
   ziplem-ap2 wt m DoRefl = DoRefl
   ziplem-ap2 wt m (DoAna x d) = DoSynth (SAZipApAna m wt x) (ziplem-ap2 wt m d)
 
-  ziplem-nehole-a : ∀{Γ e e' L t t'} →
-                (Γ ⊢ e ◆e => t) →
-                runsynth Γ e t L e' t' →
+  ziplem-nehole-a : ∀{Γ e e' L} →
+                (Γ ⊢ e ◆e <= ⦇-⦈) →
+                runana Γ e L e' ⦇-⦈ →
                 runsynth Γ ⦇⌜ e ⌟⦈ ⦇-⦈ L ⦇⌜ e' ⌟⦈ ⦇-⦈
   ziplem-nehole-a wt DoRefl = DoRefl
-  ziplem-nehole-a wt (DoSynth {e = e} x d) =
-    DoSynth (SAZipHole (rel◆ e) wt x) (ziplem-nehole-a (actsense-synth (rel◆ e) (rel◆ _) x wt) d)
+  ziplem-nehole-a wt (DoAna {e = e} x d) =
+    DoSynth (SAZipHole (rel◆ e) wt x) (ziplem-nehole-a (actsense-ana (rel◆ e) (rel◆ _) x wt) d)
 
   ziplem-nehole-b : ∀{Γ e e' L t t' t''} →
                 (Γ ⊢ e ◆e => t) →
@@ -174,7 +174,7 @@ module checks where
                 runana Γ ⦇⌜ e ⌟⦈ L ⦇⌜ e' ⌟⦈ t''
   ziplem-nehole-b wt c DoRefl = DoRefl
   ziplem-nehole-b wt c (DoSynth x rs) =
-                     DoAna (AASubsume (erase-in-hole (rel◆ _)) (SNEHole wt) (SAZipHole (rel◆ _) wt x) TCHole1)
+                     DoAna (AASubsume (rel◆ _) (snehole' wt) (saziphole' (rel◆ _) wt x) TCHole1)
                            (ziplem-nehole-b (actsense-synth (rel◆ _) (rel◆ _) x wt) c rs)
 
 
