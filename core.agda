@@ -432,7 +432,6 @@ module core where
                    Γ ⊢ (e ·+₂ eh) => num ~ α ~> (e ·+₂ eh') => num
       SAZipHole : {Γ : ·ctx} {e e' : ê} {α : action} {e◆ : ė} →
                    (erase-e e e◆) →
-                   (Γ ⊢ e◆ <= ⦇-⦈) →
                    (Γ ⊢ e ~ α ~> e' ⇐ ⦇-⦈) →
                    Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈ ~ α ~>  ⦇⌜ e' ⌟⦈ => ⦇-⦈
 
@@ -483,4 +482,4 @@ module core where
                 (Γ ⊢ e◆ => t) →
                 (Γ ⊢ e => t ~ α ~> e' => t') →
                 Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈ ~ α ~>  ⦇⌜ e' ⌟⦈ => ⦇-⦈
-  saziphole' a b c = SAZipHole a (ASubsume b TCHole2) (AASubsume a b c TCHole2)
+  saziphole' a b c = SAZipHole a (AASubsume a b c TCHole2)

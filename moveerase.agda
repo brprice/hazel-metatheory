@@ -54,6 +54,23 @@ module moveerase where
   moveeraset' er m with erase-t◆ er
   moveeraset' er m | refl = ◆erase-t _ _ (! (moveeraset m))
 
+-- erase-e ⦇⌜ e ⌟⦈ e◆
+-- Γ ⊢ e◆ => ⦇-⦈
+-- -------------------
+-- ? ∋ e
+  invert-hole-syn :  ∀{Γ e} →
+                     Γ ⊢ ⦇⌜ e ⌟⦈ => ⦇-⦈ →
+                     Γ ⊢ e <= ⦇-⦈
+  invert-hole-syn (SNEHole wt) = wt
+
+  invert-hole-syn◆ :  ∀{Γ e e◆ h◆} →
+                      erase-e ⦇⌜ e ⌟⦈ h◆ →
+                      erase-e e e◆ →
+                      Γ ⊢ h◆ => ⦇-⦈ →
+                      Γ ⊢ e◆ <= ⦇-⦈
+  invert-hole-syn◆ (EENEHole er1) er2 wt with erasee-det er1 er2
+  ... | refl = invert-hole-syn wt
+
   -- movements don't change either the type or expression under expression
   -- actions
   mutual
@@ -79,7 +96,7 @@ module moveerase where
     ... | refl = ap1 (λ q → _ ∘ q)  (moveerase-ana er x₁ x₄ ) , refl
     moveerase-synth (EEPlusL er) (SPlus x x₁) (SAZipPlus1 x₂) = ap1 (λ q → q ·+ _) (moveerase-ana er x x₂)  , refl
     moveerase-synth (EEPlusR er) (SPlus x x₁) (SAZipPlus2 x₂) = ap1 (λ q → _ ·+ q) (moveerase-ana er x₁ x₂) , refl
-    moveerase-synth er wt (SAZipHole x x₁ d) = ap1 ⦇⌜_⌟⦈ (moveerase-ana x x₁ d) , refl
+    moveerase-synth ehr wt (SAZipHole er d) = ap1 ⦇⌜_⌟⦈ (moveerase-ana er (invert-hole-syn◆ ehr er wt) d) , refl
 
     moveerase-ana : ∀{Γ e e' e◆ t δ } →
                       (er : erase-e e e◆) →

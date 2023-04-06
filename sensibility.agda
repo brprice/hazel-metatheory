@@ -59,8 +59,8 @@ module sensibility where
       with actsense-ana er er' x x₂
     ... | ih = SPlus x₁ ih
 
-    actsense-synth er (EENEHole er') (SAZipHole x x₁ act) wt
-     = SNEHole (actsense-ana x er' act x₁)
+    actsense-synth er (EENEHole er') (SAZipHole x act) wt
+     = SNEHole (actsense-ana x er' act (invert-hole-syn◆ er x wt))
 
     -- if an action transforms an ê in an analytic posistion to another ê,
     -- they have the same type up erasure of the cursor.

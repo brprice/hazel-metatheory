@@ -165,7 +165,7 @@ module checks where
                 runsynth Γ ⦇⌜ e ⌟⦈ ⦇-⦈ L ⦇⌜ e' ⌟⦈ ⦇-⦈
   ziplem-nehole-a wt DoRefl = DoRefl
   ziplem-nehole-a wt (DoAna {e = e} x d) =
-    DoSynth (SAZipHole (rel◆ e) wt x) (ziplem-nehole-a (actsense-ana (rel◆ e) (rel◆ _) x wt) d)
+    DoSynth (SAZipHole (rel◆ e) x) (ziplem-nehole-a (actsense-ana (rel◆ e) (rel◆ _) x wt) d)
 
   ziplem-nehole-b : ∀{Γ e e' L t t' t''} →
                 (Γ ⊢ e ◆e => t) →

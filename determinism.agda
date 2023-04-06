@@ -73,7 +73,7 @@ module determinism where
   synthmovedet (SAZipApAna _ _ x) EMApParent2     = abort (lem-nomove-para x)
   synthmovedet (SAZipPlus1 x) EMPlusParent1       = abort (lem-nomove-para x)
   synthmovedet (SAZipPlus2 x) EMPlusParent2       = abort (lem-nomove-para x)
-  synthmovedet (SAZipHole _ _ x) EMNEHoleParent   = abort (lem-nomove-para x)
+  synthmovedet (SAZipHole _ x) EMNEHoleParent     = abort (lem-nomove-para x)
 
   anamovedet : {Γ : ·ctx} {e e' e'' : ê} {t : τ̇} {δ : direction} →
          (Γ ⊢ e ~ move δ ~> e'' ⇐ t) →
@@ -245,13 +245,11 @@ module determinism where
     actdet-synth EETop (SNEHole wt) SAConNEHole SAConNEHole = refl , refl
 
     actdet-synth (EENEHole E) (SNEHole wt) (SAMove x) (SAMove x₁) = movedet x x₁ , refl
-    actdet-synth (EENEHole E) (SNEHole wt) (SAMove EMNEHoleParent) (SAZipHole _ x₁ d2) = abort (lem-nomove-para d2)
-    actdet-synth (EENEHole E) (SNEHole wt) (SAZipHole _ x d1) (SAMove EMNEHoleParent) = abort (lem-nomove-para d1)
-    actdet-synth (EENEHole E) (SNEHole wt) (SAZipHole a x d1) (SAZipHole b x₁ d2) {p1} {p2}
-      with erasee-det a b
-    ... | refl with actdet-ana a x d1 d2  {p1} {p2}
+    actdet-synth (EENEHole E) (SNEHole wt) (SAMove EMNEHoleParent) (SAZipHole _ d2) = abort (lem-nomove-para d2)
+    actdet-synth (EENEHole E) (SNEHole wt) (SAZipHole _ d1) (SAMove EMNEHoleParent) = abort (lem-nomove-para d1)
+    actdet-synth (EENEHole E) (SNEHole wt) (SAZipHole a d1) (SAZipHole b d2) {p1} {p2}
+      with actdet-ana E wt d1 d2 {p1} {p2}
     ... | refl = refl , refl
-
 
     -- an action on an expression in an analytic position produces one
     -- resultant expression and type.

@@ -206,8 +206,7 @@ module structural where
                                                                   (act-weak-ana apt (π2 f) (π2 f') x₃)
     act-weak-synth apt f f' (SAZipPlus1 x₁) = SAZipPlus1 (act-weak-ana apt (π1 f) (π1 f') x₁)
     act-weak-synth apt f f' (SAZipPlus2 x₁) = SAZipPlus2 (act-weak-ana apt (π2 f) (π2 f') x₁)
-    act-weak-synth apt f f' (SAZipHole x₁ x₂ d) = SAZipHole x₁ (wt-weak-ana apt x₂ (fresh-er-lem x₁ f))
-                                                               (act-weak-ana apt f f' d)
+    act-weak-synth apt f f' (SAZipHole x₁ d) = SAZipHole x₁ (act-weak-ana apt f f' d)
 
     act-weak-ana : ∀{ Γ x t t' e e' α } →
                          x # Γ →

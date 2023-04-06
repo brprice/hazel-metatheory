@@ -16,7 +16,7 @@ module aasubsume-min where
     aasubmin-synth (SAZipApAna x x₁ x₂) = aasubmin-ana x₂
     aasubmin-synth (SAZipPlus1 x) = aasubmin-ana x
     aasubmin-synth (SAZipPlus2 x) = aasubmin-ana x
-    aasubmin-synth (SAZipHole x x₁ d) = aasubmin-ana d
+    aasubmin-synth (SAZipHole x d) = aasubmin-ana d
     aasubmin-synth _ = ⊤
 
     aasubmin-ana : ∀{Γ e α e' t} → (Γ ⊢ e ~ α ~> e' ⇐ t) → Set
@@ -51,7 +51,7 @@ module aasubsume-min where
   min-ana-lem (SAZipApAna x x₁ x₂) min = min
   min-ana-lem (SAZipPlus1 x) min = min
   min-ana-lem (SAZipPlus2 x) min = min
-  min-ana-lem (SAZipHole x x₁ c) min = min
+  min-ana-lem (SAZipHole x c) min = min
 
   -- any derivation of an action can be minimized to avoid this cases that
   -- induce non-determinism.
@@ -81,8 +81,8 @@ module aasubsume-min where
     ... | _ , a , b = _ , SAZipPlus1 a , b
     min-synth (SAZipPlus2 x) with min-ana x
     ... | _ , a , b = _ , SAZipPlus2 a , b
-    min-synth (SAZipHole x x₁ d) with min-ana d
-    ... | _ , a , b = _ , SAZipHole x x₁ a , b
+    min-synth (SAZipHole x d) with min-ana d
+    ... | _ , a , b = _ , SAZipHole x a , b
 
     min-ana : ∀{Γ e α e' t} → (d : Γ ⊢ e ~ α ~> e' ⇐ t) → Σ[ e'' ∈ ê ] Σ[ d' ∈  Γ ⊢ e ~ α ~> e'' ⇐ t ] aasubmin-ana d'
     min-ana (AASubsume {Γ = Γ} x x₁ (SAMove x₂) x₃) = _ , AAMove x₂ , <>
@@ -110,8 +110,8 @@ module aasubsume-min where
     ... | a , b , c = _ , AASubsume x x₁ (SAZipPlus1 b) x₃ , c
     min-ana (AASubsume x x₁ (SAZipPlus2 x₂) x₃) with min-ana x₂
     ... | a , b , c = _ , AASubsume x x₁ (SAZipPlus2 b) x₃ , c
-    min-ana (AASubsume x x₁ (SAZipHole x₂ x₃ x₄) x₅) with min-ana x₄
-    ... | a , b , c = _ , AASubsume x x₁ (SAZipHole x₂ x₃ b) x₅ , c
+    min-ana (AASubsume x x₁ (SAZipHole x₂ x₄) x₅) with min-ana x₄
+    ... | a , b , c = _ , AASubsume x x₁ (SAZipHole x₂ b) x₅ , c
     min-ana (AAMove x) = _ , AAMove x , <>
     min-ana AADel = _ , AADel , <>
     min-ana AAConAsc = _ , AAConAsc , <>
@@ -161,7 +161,7 @@ module aasubsume-min where
     min-fixed-synth (SAZipPlus2 x) min with min-fixed-ana x min
     ... | qq with min-ana x
     ... | (e'' , _ , _) = ap1 (λ q → _ ·+₂ q) qq
-    min-fixed-synth (SAZipHole x x₁ d) min with min-fixed-ana d min
+    min-fixed-synth (SAZipHole x d) min with min-fixed-ana d min
     ... | qq with min-ana d
     ... | (e'' , _ , _) = ap1 ⦇⌜_⌟⦈ qq
 
@@ -197,7 +197,7 @@ module aasubsume-min where
     min-fixed-ana (AASubsume x x₁ (SAZipPlus2 x₂) x₃) min with min-fixed-ana x₂ min
     ... | qq with min-ana x₂
     ... | (e'' , _ , _) = ap1 (λ q → _ ·+₂ q) qq
-    min-fixed-ana (AASubsume x x₁ (SAZipHole x₂ x₃ x₄) x₅) min with min-fixed-ana x₄ min
+    min-fixed-ana (AASubsume x x₁ (SAZipHole x₂ x₄) x₅) min with min-fixed-ana x₄ min
     ... | qq with min-ana x₄
     ... | (e'' , _ , _) = ap1 ⦇⌜_⌟⦈ qq
     min-fixed-ana (AAMove x) min = refl
